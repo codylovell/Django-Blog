@@ -27,18 +27,18 @@ def new_post(request):
 def edit_post(request, post_id):
     """Edit an exisiting post."""
     #get post to edit.
-    post = BlogPost.objects.get(id=post_id)
+    if form.is_valid():
+        post = BlogPost.objects.get(id=post_id)
 
-    #get text of post
-    text = post.text
+        #get text of post
+        text = post.text
     if request.method != 'POST':
         form = BlogPostForm(instance=post)
 
     else:
         form = BlogPostForm(instance=post, data=request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('home'))
+        form.save()
+        return HttpResponseRedirect(reverse('home'))
 
     context = {'post': post, 'text': text, 'form': form}
     return render(request, 'edit_post.html', context)

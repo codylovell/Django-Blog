@@ -15,12 +15,17 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.contrib.auth.views import login
 
 from blogs import views
+from users import views as users_views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.home, name='home'),
     url(r'^new_post/$', views.new_post, name='new_post'),
     url(r'^edit_post/(?P<post_id>\d+)/$', views.edit_post, name='edit_post'),
+    url(r'^login/', login, {'template_name': 'users/login.html'}, name='login'),
+    url(r'^logout/$', users_views.logout_view, name='logout'),
+    url(r'^register/$', users_views.register, name='register'),
     ]
