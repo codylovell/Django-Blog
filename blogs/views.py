@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
 
 from blogs.models import BlogPost
 from blogs.forms import BlogPostForm
@@ -11,6 +12,7 @@ def home(request):
     context = {'posts': posts}
     return render(request, 'home.html', context)
 
+@login_required
 def new_post(request):
     """Add a new post."""
     if request.method != 'POST':
@@ -24,11 +26,14 @@ def new_post(request):
     context = {'form': form}
     return render(request, 'new_post.html', context)
 
+@login_required
 def edit_post(request, post_id):
     """Edit an exisiting post."""
     #get post to edit.
     if form.is_valid():
         post = BlogPost.objects.get(id=post_id)
+        if post.poster != request.user:
+            raise Http404
 
         #get text of post
         text = post.text
